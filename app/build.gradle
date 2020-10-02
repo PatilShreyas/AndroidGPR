@@ -25,9 +25,7 @@ android {
 }
 
 def localProperties = new Properties()
-try {
-    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
-} catch (Exception ignored) {}
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 repositories {
     maven {
