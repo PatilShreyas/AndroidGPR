@@ -9,8 +9,9 @@ Refer [`release.yml`](/.github/workflows/release.yml) workflow which is GitHub A
  
 ## Library configuration
 
+Refer [`build.gradle`](simplelibrary/build.gradle) of [**simplelibrary**](simplelibrary/) module.
+
 ```gradle
-...
 apply plugin: 'maven-publish'  // 1. Apply plugin
 
 // 2. Declare library details
@@ -24,9 +25,9 @@ ext {
     mLibraryDescription = "Simple Library for simple things!"
 }
 
-android {...}
+android {}
 
-dependencies {...}
+dependencies {}
 
 
 // 3. Declare task for creation of android sources.
@@ -75,6 +76,8 @@ publish.dependsOn assemble
 
 ## Implement library in app
 
+Refer [`build.gradle`](app/build.gradle) of [**app**](app/) module.
+
 ```gradle
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
@@ -91,7 +94,6 @@ repositories {
 }
 
 dependencies {
-    ...
     // Simple library
     implementation 'com.example:simple-library:0.2.0'
 }
