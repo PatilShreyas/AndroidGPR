@@ -72,3 +72,27 @@ afterEvaluate {
 // Assembling should be performed before publishing package
 publish.dependsOn assemble
 ```
+
+## Implement library in app
+
+```gradle
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/PatilShreyas/AndroidGPR")
+        credentials {
+            username = 'PatilShreyas'
+            password = localProperties.getProperty("GPR_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    ...
+    // Simple library
+    implementation 'com.example:simple-library:0.2.0'
+}
+```
