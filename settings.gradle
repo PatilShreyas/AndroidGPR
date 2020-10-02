@@ -1,0 +1,3 @@
+include ':simplelibrary'
+include ':app'
+rootProject.name = "AndroidGPRDemo"
