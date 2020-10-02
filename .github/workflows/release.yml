@@ -1,0 +1,61 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    name: Release Simple Library
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up JDK 12
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12
+
+      - name: Cache Gradle and wrapper
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant Permission for Gradlew to Execute
+        run: chmod +x gradlew
+
+      - name: Build AAR ⚙️🛠
+        run: bash ./gradlew :simplelibrary:assemble
+
+      - name: Publish to GitHub Package Registry 🚀
+        run: bash ./gradlew :simplelibrary:publish
+        env:
+          GPR_USER: ${{ GITHUB_ACTOR }}
+          GPR_KEY: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release ✅
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - name: Upload Simple Library AAR 🗳
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: simplelibrary/build/outputs/aar/simplelibrary-release.aar
+          asset_name: simple-library.aar
+          asset_content_type: application/aar
